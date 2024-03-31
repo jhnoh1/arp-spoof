@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 	char my_ip_addres[16]; // IP 주소를 저장할 문자열
-    char my_mac_addres[18];
+    	char my_mac_addres[18];
 	get_ip_address(my_ip_addres);
 	get_mac_address(my_mac_addres);
 	Ip my_ip_address = Ip(my_ip_addres);
@@ -179,7 +179,6 @@ int main(int argc, char* argv[]) {
 		send_packet(handle,sendm,my_mac_address,my_mac_address,targeti,sendm,sendi,2);
 		fir = fir +2;
 	}
-	struct li_my list_mine;
 	while(true){
 		for (int a=0;a>(argc-1)/2;a++){
 			check_packet(handle,sendermac_ipli[a].sendip,sendermac_ipli[a]sendmac,my_mac_address,my_ip_address);
