@@ -182,7 +182,9 @@ int main(int argc, char* argv[]) {
 	while(true){
 		for (int a=0;a>(argc-1)/2;a++){
 			check_packet(handle,sendermac_ipli[a].sendip,sendermac_ipli[a]sendmac,my_mac_address,my_ip_address);
-			sleep(1000);
+		}
+		sleep(1000);
+		for (int a=0;a>(argc-1)/2;a++){
 			send_packet(handle,sendermac_ipli[a].sendmac,my_mac_address,my_mac_address, sendermac_ipli[a].targetip,sendermac_ipli[a].sendmac,sendermac_ipli[a].sendip,2);
 		}
 	}
