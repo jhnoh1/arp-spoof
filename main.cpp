@@ -138,7 +138,7 @@ void relay_packet(pcap_t *handle,EthArpPacket packet, Ip targetip, Mac my_mac,Ip
 	struct Mac idontk = Mac("00:00:00:00:00:00")
 	Mac targetmac;
 	send_packet(handle,all,my_mac,my_mac,my_ip,idontk,targetip,2);
-	get_packet(hadle,targetip,*targetmac);
+	get_packet(handle,targetip,*targetmac);
 	send_packet(handle,packet.eth_.dmac(),my_mac,packet.arp_.smac(),packet.arp_.ip(),targetmac,targetip,1);
 }
 
