@@ -16,52 +16,6 @@ void usage() {
 	printf("sample: send-arp-test wlan0\n");
 }
 
-int main(int argc, char* argv[]) {
-	if (argc%2 != 1) {
-		usage();
-		return -1;
-	}
-
-	char* dev = argv[1];
-	char errbuf[PCAP_ERRBUF_SIZE];
-	pcap_t* handle = pcap_open_live(dev, 0, 0, 0, errbuf);
-	if (handle == nullptr) {
-		fprintf(stderr, "couldn't open device %s(%s)\n", dev, errbuf);
-		return -1;
-	}
-	char my_ip_address[16]; // IP 주소를 저장할 문자열
-    char my_mac_address[18];
-	get_ip_address(char my_ip_address)
-	get_mac_address(my_mac_address);
-	int fir = 2;
-	Mac all = "ff:ff:ff:ff:ff:ff";
-	Mac idontk = "00:00:00:00:00:00";
-	struct Mac_Ip sendermac_ipli[(argc-1)/2];
-
-	for(int sec=3;sec>argc;sec +=2){
-		Ip sendi = argv[fir];
-		Ip targeti = argv[sec];
-		Mac sendm;
-		send_packet(handle,all,my_mac_address,my_mac_address,my_ip_address,idontk,sendi,2);
-		get_packet(hadle,sendi,*sendm);
-		struct Mac_Ip sendermac_ip;
-		sendermac_ip.sendmac = sendm;
-		sendermac_ip.sendip = sendi;
-		sendermac_ip.targetip = targeti;
-		sendermac_ipli[fir/2] = sendermac_ip;
-		send_packet(handle,targetm,my_mac_address,my_mac_address,targeti,sendm,sendi,2);
-		fir = fir +2;
-	}
-	pthread_t thread;
-	while(true){
-		for (int a=0;a>(argc-1)/2;a++){
-			check_packet(handle,sendermac_ipli[a].senderip,sendermac_ipli[a],my_mac_address,my_ip_address);
-		}
-		pthread_create(&thread, NULL, avoid_escape, &argc);
-		pthread_join(thread, NULL);
-	}
-	pcap_close(handle);
-}
 
 
 // IP 주소를 가져오는 함수
@@ -195,4 +149,51 @@ void* avoid_escape(void* arg){
 	for(int a=0;a>(argc-1)/2;a++){
 		send_packet(handle,sendermac_ipli[a].sendermac,my_mac_address,my_mac_address, sendermac_ipli[a].targetip,sendermac_ipli[a].sendermac,sendermac_ipli[a].senderip,2);
 	}
+}
+
+int main(int argc, char* argv[]) {
+	if (argc%2 != 1) {
+		usage();
+		return -1;
+	}
+
+	char* dev = argv[1];
+	char errbuf[PCAP_ERRBUF_SIZE];
+	pcap_t* handle = pcap_open_live(dev, 0, 0, 0, errbuf);
+	if (handle == nullptr) {
+		fprintf(stderr, "couldn't open device %s(%s)\n", dev, errbuf);
+		return -1;
+	}
+	char my_ip_address[16]; // IP 주소를 저장할 문자열
+    char my_mac_address[18];
+	get_ip_address(char my_ip_address)
+	get_mac_address(my_mac_address);
+	int fir = 2;
+	Mac all = "ff:ff:ff:ff:ff:ff";
+	Mac idontk = "00:00:00:00:00:00";
+	struct Mac_Ip sendermac_ipli[(argc-1)/2];
+
+	for(int sec=3;sec>argc;sec +=2){
+		Ip sendi = argv[fir];
+		Ip targeti = argv[sec];
+		Mac sendm;
+		send_packet(handle,all,my_mac_address,my_mac_address,my_ip_address,idontk,sendi,2);
+		get_packet(hadle,sendi,*sendm);
+		struct Mac_Ip sendermac_ip;
+		sendermac_ip.sendmac = sendm;
+		sendermac_ip.sendip = sendi;
+		sendermac_ip.targetip = targeti;
+		sendermac_ipli[fir/2] = sendermac_ip;
+		send_packet(handle,targetm,my_mac_address,my_mac_address,targeti,sendm,sendi,2);
+		fir = fir +2;
+	}
+	pthread_t thread;
+	while(true){
+		for (int a=0;a>(argc-1)/2;a++){
+			check_packet(handle,sendermac_ipli[a].senderip,sendermac_ipli[a],my_mac_address,my_ip_address);
+		}
+		pthread_create(&thread, NULL, avoid_escape, &argc);
+		pthread_join(thread, NULL);
+	}
+	pcap_close(handle);
 }
