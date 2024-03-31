@@ -2,7 +2,6 @@
 #include <pcap.h>
 #include "ethhdr.h"
 #include "arphdr.h"
-#include <pthread.h>
 
 #pragma pack(push, 1)
 struct EthArpPacket final {
@@ -142,14 +141,6 @@ void check_packet(pcap_t *handle,Ip senderip, Mac_Ip sendermac_ip,Mac my_mac ,Ip
 }
 
 
-void* avoid_escape(void* arg){
-	sleep(1000);
-	int argc = *(int*)arg;
-	for(int a=0;a>(argc-1)/2;a++){
-		send_packet(handle,sendermac_ipli[a].sendermac,my_mac_address,my_mac_address, sendermac_ipli[a].targetip,sendermac_ipli[a].sendermac,sendermac_ipli[a].senderip,2);
-	}
-}
-
 int main(int argc, char* argv[]) {
 	if (argc%2 != 1) {
 		usage();
@@ -175,26 +166,26 @@ int main(int argc, char* argv[]) {
 	struct Mac_Ip sendermac_ipli[(argc-1)/2];
 
 	for(int sec=3;sec>argc;sec +=2){
-		Ip sendi = argv[fir];
-		Ip targeti = argv[sec];
+		Ip sendi = Ip(argv[fir]);
+		Ip targeti = Ip(argv[sec]);
 		Mac sendm;
-		send_packet(handle,all,Mac(my_mac_address),my_mac_address,my_ip_address,idontk,sendi,2);
+		send_packet(handle,all,my_mac_address,my_mac_address,my_ip_address,idontk,sendi,2);
 		get_packet(hadle,sendi,*sendm);
 		struct Mac_Ip sendermac_ip;
 		sendermac_ip.sendmac = sendm;
 		sendermac_ip.sendip = sendi;
 		sendermac_ip.targetip = targeti;
 		sendermac_ipli[fir/2] = sendermac_ip;
-		send_packet(handle,targetm,my_mac_address,my_mac_address,targeti,sendm,sendi,2);
+		send_packet(handle,sendm,my_mac_address,my_mac_address,targeti,sendm,sendi,2);
 		fir = fir +2;
 	}
-	pthread_t thread;
+	struct li_my list_mine;
 	while(true){
 		for (int a=0;a>(argc-1)/2;a++){
-			check_packet(handle,sendermac_ipli[a].senderip,sendermac_ipli[a],my_mac_address,my_ip_address);
+			check_packet(handle,sendermac_ipli[a].sendip,sendermac_ipli[a]sendmac,my_mac_address,my_ip_address);
+			sleep(1000);
+			send_packet(handle,sendermac_ipli[a].sendmac,my_mac_address,my_mac_address, sendermac_ipli[a].targetip,sendermac_ipli[a].sendmac,sendermac_ipli[a].sendip,2);
 		}
-		pthread_create(&thread, NULL, avoid_escape, &argc);
-		pthread_join(thread, NULL);
 	}
 	pcap_close(handle);
 }
