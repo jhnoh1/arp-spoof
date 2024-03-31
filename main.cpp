@@ -102,6 +102,21 @@ void send_packet(pcap_t* handle, Mac dmac, Mac smac, Mac ssmac, Ip sip,Mac tmac,
 		}
 }
 
+struct Mac_Ip{
+	Mac sendmac;
+	Ip sendip;
+	Ip targetip;
+};
+
+void relay_packet(pcap_t *handle,EthArpPacket packet, Ip targetip, Mac my_mac,Ip my_ip){
+	struct Mac all = Mac("ff:ff:ff:ff:ff:ff")
+	struct Mac idontk = Mac("00:00:00:00:00:00")
+	Mac targetmac;
+	send_packet(handle,all,my_mac,my_mac,my_ip,idontk,targetip,2);
+	get_packet(handle,targetip,*targetmac);
+	send_packet(handle,packet.eth_.dmac(),my_mac,packet.arp_.smac(),packet.arp_.ip(),targetmac,targetip,1);
+}
+
 void check_packet(pcap_t *handle,Ip senderip, Mac_Ip sendermac_ip,Mac my_mac ,Ip my_ip){
 	struct pcap_pkthdr *header;
 	struct EthArpPacket packet;
@@ -124,22 +139,6 @@ void check_packet(pcap_t *handle,Ip senderip, Mac_Ip sendermac_ip,Mac my_mac ,Ip
 		relay_packet(handle,packet,sendermac_ip.targetip,my_mac,my_ip);
 	}
 	return;
-}
-
-
-struct Mac_Ip{
-	Mac sendmac;
-	Ip sendip;
-	Ip targetip;
-};
-
-void relay_packet(pcap_t *handle,EthArpPacket packet, Ip targetip, Mac my_mac,Ip my_ip){
-	struct Mac all = Mac("ff:ff:ff:ff:ff:ff")
-	struct Mac idontk = Mac("00:00:00:00:00:00")
-	Mac targetmac;
-	send_packet(handle,all,my_mac,my_mac,my_ip,idontk,targetip,2);
-	get_packet(handle,targetip,*targetmac);
-	send_packet(handle,packet.eth_.dmac(),my_mac,packet.arp_.smac(),packet.arp_.ip(),targetmac,targetip,1);
 }
 
 
