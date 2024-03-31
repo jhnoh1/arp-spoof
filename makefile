@@ -2,7 +2,7 @@ LDLIBS=-lpcap
 
 all: arp-spoof
 
-main.o: mac.h ip.h ethhdr.h arphdr.h pthread.h main.cpp
+main.o: mac.h ip.h ethhdr.h arphdr.h main.cpp
 
 arphdr.o: mac.h ip.h arphdr.h arphdr.cpp
 
