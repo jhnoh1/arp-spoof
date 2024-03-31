@@ -164,20 +164,22 @@ int main(int argc, char* argv[]) {
 		fprintf(stderr, "couldn't open device %s(%s)\n", dev, errbuf);
 		return -1;
 	}
-	char my_ip_address[16]; // IP 주소를 저장할 문자열
-    char my_mac_address[18];
-	get_ip_address(char my_ip_address)
-	get_mac_address(my_mac_address);
+	char my_ip_addres[16]; // IP 주소를 저장할 문자열
+    char my_mac_addres[18];
+	get_ip_address(my_ip_addres);
+	get_mac_address(my_mac_addres);
+	Ip my_ip_address = Ip(my_ip_addres);
+	Mac my_mac_address = Mac(my_mac_addres);
 	int fir = 2;
-	struct Mac all = Mac("ff:ff:ff:ff:ff:ff")
-	struct Mac idontk = Mac("00:00:00:00:00:00")
+	struct Mac all = Mac("ff:ff:ff:ff:ff:ff");
+	struct Mac idontk = Mac("00:00:00:00:00:00");
 	struct Mac_Ip sendermac_ipli[(argc-1)/2];
 
 	for(int sec=3;sec>argc;sec +=2){
 		Ip sendi = argv[fir];
 		Ip targeti = argv[sec];
 		Mac sendm;
-		send_packet(handle,all,my_mac_address,my_mac_address,my_ip_address,idontk,sendi,2);
+		send_packet(handle,all,Mac(my_mac_address),my_mac_address,my_ip_address,idontk,sendi,2);
 		get_packet(hadle,sendi,*sendm);
 		struct Mac_Ip sendermac_ip;
 		sendermac_ip.sendmac = sendm;
