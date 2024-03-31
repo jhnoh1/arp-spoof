@@ -67,7 +67,7 @@ void get_packet(pcap_t *handle, Ip senderip, Mac *sendermac){
 	while(true){
 		struct pcap_pkthdr *header;
 		struct EthArpPacket packet;
-		int res =pcap_next_ex(handle, reinterpret_cast<const u_char*>(&header), &packet);
+		int res =pcap_next_ex(handle, &header,reinterpret_cast<const u_char*>( &packet);
 		if (res == 0){
 			return;
 		}
@@ -122,7 +122,7 @@ void check_packet(pcap_t *handle,Ip senderip, Mac_Ip sendermac_ip,Mac my_mac ,Ip
 	struct EthArpPacket packet;
 	struct Mac all = Mac("ff:ff:ff:ff:ff:ff")
 	struct Mac idontk = Mac("00:00:00:00:00:00")
-	int res =pcap_next_ex(handle, reinterpret_cast<const u_char*>(&header), &packet);
+	int res = pcap_next_ex(handle, &header,reinterpret_cast<const u_char*>( &packet);
 	if (res == 0){
 		return;
 	}
